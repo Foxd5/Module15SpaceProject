@@ -6,9 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace MinimalShooting.ControllerPackage
 {
-    /// <summary>
-    /// KeyboardController
-    /// </summary>
+  w
     public class KeyboardController : MonoBehaviour
     {   
         private Vector3 _inputVector;
