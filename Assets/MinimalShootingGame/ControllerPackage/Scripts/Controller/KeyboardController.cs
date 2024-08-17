@@ -10,7 +10,7 @@ namespace MinimalShooting.ControllerPackage
     /// KeyboardController
     /// </summary>
     public class KeyboardController : MonoBehaviour
-    {
+    {   
         private Vector3 _inputVector;
         public Vector3 InputVector
         {
@@ -26,7 +26,8 @@ namespace MinimalShooting.ControllerPackage
             float h = Input.GetAxisRaw("Horizontal");
             float v = Input.GetAxisRaw("Vertical");
 
-            this._inputVector = new Vector3(h, 0.0f, v);
+            // Update _inputVector for 2D movement (X and Y axes)
+            this._inputVector = new Vector3(h, v, 0.0f);  // Changed Z to Y for 2D from the original code
         }
     }
 }
