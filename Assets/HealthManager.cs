@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HealthManager : MonoBehaviour
@@ -11,7 +12,12 @@ public class HealthManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
+        if (healthBar == null)
+        {
+            Debug.LogError("Health bar Image is not assigned in the Inspector."); //debug testing !
+        }
+
     }
 
     // Update is called once per frame
@@ -20,14 +26,14 @@ public class HealthManager : MonoBehaviour
         if (healthAmount <= 0) //testing damage and healing. enter to take dam,
                                //space to heal, if at 0 level should reset. 
         {
-            Application.LoadLevel(Application.loadedLevel);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-        if (Input.GetKeyDown(KeyCode.Return)) //e
+        if (Input.GetKeyDown(KeyCode.Return)) //enter does 20 damage to ship
         {
             TakeDamage(20);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space)) //space bar heals 5 damage
         {
             Heal(5);
         }
@@ -44,7 +50,6 @@ public class HealthManager : MonoBehaviour
     {
         healthAmount += healingAmount;
         healthAmount = Mathf.Clamp(healthAmount, 0, 100);
-
         healthBar.fillAmount = healthAmount / 100f;
     }
 }
