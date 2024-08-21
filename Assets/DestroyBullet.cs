@@ -7,7 +7,7 @@ public class DestroyBullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject, 5f); //destroys the bullet after 5 seconds (offscreen)
+        Destroy(gameObject, 2f); //destroys the bullet after 5 seconds (offscreen)
     }
 
     // Update is called once per frame
