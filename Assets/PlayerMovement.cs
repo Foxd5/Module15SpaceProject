@@ -26,19 +26,19 @@ public class NewBehaviourScript : MonoBehaviour
     {
         Vector3 pos = transform.position;
 
-        if (Input.GetKey("w"))
+        if (Input.GetKey("w") || Input.GetKey("up"))
         {
             pos.y += speed * Time.deltaTime;
         }
-        if (Input.GetKey("s"))
+        if (Input.GetKey("s") || Input.GetKey("down"))
         {
             pos.y -= speed * Time.deltaTime;
         }
-        if (Input.GetKey("d"))
+        if (Input.GetKey("d") || Input.GetKey("right"))
         {
             pos.x += speed * Time.deltaTime;
         }
-        if (Input.GetKey("a"))
+        if (Input.GetKey("a") || Input.GetKey("left"))
         {
             pos.x -= speed * Time.deltaTime;
         }

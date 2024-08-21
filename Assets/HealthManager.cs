@@ -33,7 +33,7 @@ public class HealthManager : MonoBehaviour
             TakeDamage(20);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) //space bar heals 5 damage
+        if (Input.GetKeyDown(KeyCode.B)) //space bar heals 5 damage
         {
             Heal(5);
         }
