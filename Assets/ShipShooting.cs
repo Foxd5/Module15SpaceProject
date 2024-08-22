@@ -33,7 +33,7 @@ public class ShipShooting : MonoBehaviour
         }
 
         // Reload if out of bullets
-        if (currentBullets <= 0)
+        if (currentBullets <= 0 || Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(Reload());
         }
@@ -69,6 +69,15 @@ public class ShipShooting : MonoBehaviour
 
     void UpdateBulletUI()
     {
-        bulletCounterText.text = "Bullets: " + currentBullets;  // Update the bullet counter on screen
+        //bulletCounterText.text = "Bullets: " + currentBullets;  // Update the bullet counter on screen
+        // Create a string of tick marks based on the current number of bullets
+        string bulletTicks = "Ammo: ";
+        for (int i = 0; i < currentBullets; i++)
+        {
+            bulletTicks += "|";  // Add a tick mark for each bullet
+        }
+
+        // Update the bulletCounterText with the string of tick marks
+        bulletCounterText.text = bulletTicks;
     }
 }
