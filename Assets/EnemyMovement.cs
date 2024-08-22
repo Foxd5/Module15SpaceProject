@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class EnemyMovement : MonoBehaviour
 {
     public float moveSpeed = 2f;  // Movement speed
@@ -42,8 +43,9 @@ public class EnemyMovement : MonoBehaviour
         {
             Wait();
         }
-        // Clamp the position so it stays within the screen bounds
-        ClampPosition();
+
+        // Check if the enemy is hitting the screen boundary and change direction if needed
+        CheckBoundsAndChangeDirection();
     }
 
     void MoveEnemy()
@@ -78,10 +80,24 @@ public class EnemyMovement : MonoBehaviour
         randomDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
     }
 
-    void ClampPosition()
+    void CheckBoundsAndChangeDirection()
     {
-        // Clamp the enemy ship’s position so it stays within the screen bounds
         Vector3 pos = transform.position;
+
+        // If the enemy ship hits the screen boundary, reverse its direction on that axis
+        if (pos.x >= screenBounds.x - objectWidth || pos.x <= -screenBounds.x + objectWidth)
+        {
+            // Reverse the X direction if hitting the left or right screen bounds
+            randomDirection.x = -randomDirection.x;
+        }
+
+        if (pos.y >= screenBounds.y - objectHeight || pos.y <= -screenBounds.y + objectHeight)
+        {
+            // Reverse the Y direction if hitting the top or bottom screen bounds
+            randomDirection.y = -randomDirection.y;
+        }
+
+        // Clamp the position to prevent the enemy ship from moving off-screen
         pos.x = Mathf.Clamp(pos.x, -screenBounds.x + objectWidth, screenBounds.x - objectWidth);
         pos.y = Mathf.Clamp(pos.y, -screenBounds.y + objectHeight, screenBounds.y - objectHeight);
         transform.position = pos;
