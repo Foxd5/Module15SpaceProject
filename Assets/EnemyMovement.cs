@@ -2,21 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+//This was largely done with help from youtube videos on how to get an enemy to move randomly.
+//It was just to add functionality to the alien ships so they would move on screen, it should be changed
+//later on to have enemies have much better movement
 public class EnemyMovement : MonoBehaviour
 {
-    public float moveSpeed = 2f;  // Movement speed
-    public float moveTime = 2f;   // Time spent moving in one direction
-    public float waitTime = 1f;   // Time spent waiting between direction changes
+    public float moveSpeed = 2f;  
+    public float moveTime = 2f;   
+    public float waitTime = 1f;   
 
     private Vector3 randomDirection;
     private float moveTimer;
     private float waitTimer;
     private bool isWaiting;
 
-    private Vector2 screenBounds;     // Screen boundaries
-    private float objectWidth;        // Half-width of the enemy ship
-    private float objectHeight;       // Half-height of the enemy ship
+    private Vector2 screenBounds;     
+    private float objectWidth;        // half-width of the enemy ship
+    private float objectHeight;       // half-height of the enemy ship
 
     void Start()
     {
@@ -24,13 +26,13 @@ public class EnemyMovement : MonoBehaviour
         moveTimer = moveTime;
         waitTimer = waitTime;
 
-        // Calculate the screen bounds in world units
+        // calculates the screen bounds so ship doesn't wander off screen
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
 
-        // Get the bounds from the MeshRenderer component
+        // get the bounds from the MeshRenderer component
         MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
-        objectWidth = meshRenderer.bounds.extents.x;  // Half the width of the mesh
-        objectHeight = meshRenderer.bounds.extents.y; // Half the height of the mesh
+        objectWidth = meshRenderer.bounds.extents.x;  // half the width of the mesh (remember, extents are always half)
+        objectHeight = meshRenderer.bounds.extents.y; // half the height of the mesh
     }
 
     void Update()
@@ -44,13 +46,13 @@ public class EnemyMovement : MonoBehaviour
             Wait();
         }
 
-        // Check if the enemy is hitting the screen boundary and change direction if needed
+        // checks if the enemy is hitting the screen boundary and change direction if needed
         CheckBoundsAndChangeDirection();
     }
 
     void MoveEnemy()
     {
-        // Move the enemy in the current random direction
+        // move the enemy in the current random direction
         transform.position += randomDirection * moveSpeed * Time.deltaTime;
         moveTimer -= Time.deltaTime;
 
@@ -63,7 +65,7 @@ public class EnemyMovement : MonoBehaviour
 
     void Wait()
     {
-        // Wait for a short time before moving again
+        // wait for a short time before moving again
         waitTimer -= Time.deltaTime;
 
         if (waitTimer <= 0)
@@ -76,7 +78,7 @@ public class EnemyMovement : MonoBehaviour
 
     void SetRandomDirection()
     {
-        // Set a new random direction for movement
+        // set a new random direction for movement
         randomDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
     }
 
@@ -84,20 +86,20 @@ public class EnemyMovement : MonoBehaviour
     {
         Vector3 pos = transform.position;
 
-        // If the enemy ship hits the screen boundary, reverse its direction on that axis
+        // if the enemy ship hits the screen boundary, reverse its direction on that axis
         if (pos.x >= screenBounds.x - objectWidth || pos.x <= -screenBounds.x + objectWidth)
         {
-            // Reverse the X direction if hitting the left or right screen bounds
+            // reverse the X direction if hitting the left or right screen bounds
             randomDirection.x = -randomDirection.x;
         }
 
         if (pos.y >= screenBounds.y - objectHeight || pos.y <= -screenBounds.y + objectHeight)
         {
-            // Reverse the Y direction if hitting the top or bottom screen bounds
+            // reverse the Y direction if hitting the top or bottom screen bounds
             randomDirection.y = -randomDirection.y;
         }
 
-        // Clamp the position to prevent the enemy ship from moving off-screen
+        // clamp the position to prevent the enemy ship from moving off-screen
         pos.x = Mathf.Clamp(pos.x, -screenBounds.x + objectWidth, screenBounds.x - objectWidth);
         pos.y = Mathf.Clamp(pos.y, -screenBounds.y + objectHeight, screenBounds.y - objectHeight);
         transform.position = pos;

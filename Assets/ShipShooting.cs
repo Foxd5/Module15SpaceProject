@@ -6,20 +6,22 @@ using TMPro;
 
 public class ShipShooting : MonoBehaviour
 {
-    public GameObject BulletPrefab;      // Reference to the bullet prefab
-    public Transform firePoint;          // The point where the bullet will be instantiated
-    public float bulletSpeed = 10f;      // Speed of the bullet
-    public int maxBullets = 10;          // Maximum number of bullets before reloading
-    private int currentBullets;          // Current bullets available
-    public float reloadTime = 2f;        // Time it takes to reload
-    private bool isReloading = false;    // Whether the ship is currently reloading
+    public GameObject BulletPrefab;      
+    public Transform firePoint;          // fire point is where bulle is being launched from 
+    public float bulletSpeed = 10f;      
+    public int maxBullets = 10;          // usable bullets before reload
+    private int currentBullets;          // current bullets available
+    public float reloadTime = 2f;        // time it takes to reload
+    private bool isReloading = false;    // whether the ship is currently reloading
+    public float fireRate = .2f;
+    private float nextFireTime = 0f;    
 
-    public TextMeshProUGUI bulletCounterText;       // Reference to UI Text for displaying bullet count
+    public TextMeshProUGUI bulletCounterText;
 
     void Start()
     {
-        currentBullets = maxBullets;     // Initialize with full bullets
-        UpdateBulletUI();                // Update the UI with the current bullet count
+        currentBullets = maxBullets;     //start with full bullets and update bullet UI
+        UpdateBulletUI();                
     }
 
     void Update()
@@ -27,12 +29,14 @@ public class ShipShooting : MonoBehaviour
         if (isReloading)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Space) && currentBullets > 0) // Fire if bullets are available
+        //fire if bullets are available, and space is held down OR pressed
+        if (Input.GetKey(KeyCode.Space) && currentBullets > 0 && Time.time >= nextFireTime) // Fire if bullets are available
         {
             Shoot();
+            nextFireTime = Time.time + fireRate;
         }
 
-        // Reload if out of bullets
+        // eload if out of bullets
         if (currentBullets <= 0 || Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(Reload());
@@ -41,43 +45,42 @@ public class ShipShooting : MonoBehaviour
 
     void Shoot()
     {
-        // Instantiate the bullet at the firePoint position
+        
         GameObject bullet = Instantiate(BulletPrefab, firePoint.position, firePoint.rotation);
 
-        // Add velocity to the bullet to make it move
+        // add velocity to the bullet to make it move. Should add ships velocity to this to make more realistic
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         bullet.transform.rotation = Quaternion.LookRotation(Vector3.forward, firePoint.right);
 
         rb.velocity = firePoint.up * bulletSpeed;
 
-        currentBullets--;  // Decrease the bullet count
-        UpdateBulletUI();  // Update the UI with the new bullet count
+        currentBullets--;  
+        UpdateBulletUI(); 
     }
 
     IEnumerator Reload()
     {
         isReloading = true;
-        Debug.Log("Reloading...");
-        yield return new WaitForSeconds(reloadTime);  // Wait for reload time
+        //Debug.Log("Reloading...");
+        yield return new WaitForSeconds(reloadTime);  
 
-        currentBullets = maxBullets;  // Reset the bullet count
+        currentBullets = maxBullets;  
         isReloading = false;
 
-        UpdateBulletUI();  // Update the UI with the reloaded bullet count
-        Debug.Log("Reloaded!");
+        UpdateBulletUI();  
+        //Debug.Log("Reloaded!");
     }
 
     void UpdateBulletUI()
     {
-        //bulletCounterText.text = "Bullets: " + currentBullets;  // Update the bullet counter on screen
-        // Create a string of tick marks based on the current number of bullets
+        //bulletCounterText.text = "Bullets: " + currentBullets; 
         string bulletTicks = "Ammo: ";
         for (int i = 0; i < currentBullets; i++)
         {
-            bulletTicks += "|";  // Add a tick mark for each bullet
+            bulletTicks += "|";  // adds tick mark for each bullet
         }
 
-        // Update the bulletCounterText with the string of tick marks
+        
         bulletCounterText.text = bulletTicks;
     }
 }
